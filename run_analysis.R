@@ -57,14 +57,22 @@ trainAndtestMean <- trainAndtest2 %>% select(-Activity) %>% group_by(SubjectLabe
 library(tidyr)
 molten <- trainAndtestMean %>% gather(key, value, -SubjectLabel, -ActivityLabel) %>% separate(key,into = c("key", "Axis"), sep= "-")
 
-write.table(molten, "TidyDataSet.txt", sep= "\t", row.names = FALSE)
+
+#TidyDataSet <- molten %>% spread(key, value)
+        
+# write.table(molten, "TidyDataSet.txt", sep= "\t", row.names = FALSE)
 
 # EXTRA STEP: there are two types of variables, axial and non-axial. Axial variables have an x,y,z component, non- axial do not
 NonAxial <- molten[is.na(molten$Axis),] %>% select(-Axis) %>% spread(key, value)
 Axial <- molten[!is.na(molten$Axis),] %>% spread(key, value)
 
+write.table(Axial, "TidyDataSetAxial.txt", sep= "\t", row.names = FALSE)
+write.table(NonAxial, "TidyDataSetNonAxial.txt", sep= "\t", row.names = FALSE)
 
-write.table(names(trainAndtestMean), "Codebook.txt", sep = "\t")
+#Output names of the two tidy dataset
+write.table(names(Axial), "./DataCleanHW4/AxialNames.txt", sep = "\t", row.names = FALSE)
+write.table(names(NonAxial), "./DataCleanHW4/NonAxialNames.txt", sep = "\t", row.names = FALSE)
+write.table(trainTypes, "./DataCleanHW4/ActivityLabels.txt", sep = "\t", row.names = FALSE)
 
 
 
